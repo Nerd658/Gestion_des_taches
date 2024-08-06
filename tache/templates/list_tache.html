@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Tâches</title>
+    <style>
+        /* Reset des marges et des paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Styles pour la classe container */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            
+        }
+
+        /* Styles pour la liste des tâches */
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px auto;
+        }
+
+        .task-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .task-title {
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .status.done {
+            color: green;
+        }
+
+        .status.pending {
+            color: red;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-top: 10px;
+
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: transparent;
+            border: none;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .inline-form {
+            display: inline;
+            margin-left: 10px;
+
+        
+        }
+        .task-checkbox {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+
+        }
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .search-form input, .search-form select, .search-form button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-form button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des Tâches</h1>
+
+        <!-- Bouton pour créer une nouvelle tâche -->
+        <a href="{% url 'creer_new_tache' %}" class="btn">Ajouter une nouvelle tâche</a>
+
+        <br>
+        <br>
+
+
+        <form class="search-form" method="GET" action="{% url 'list_tache' %}">
+            <input type="text" name="q" placeholder="Rechercher..." value="{{ request.GET.q|default_if_none:'' }}">
+            
+            <select name="filter_by">
+                <option value="">Tous</option>
+                <option value="completed" {% if request.GET.filter_by == 'completed' %}selected{% endif %}>Complétés</option>
+                <option value="pending" {% if request.GET.filter_by == 'pending' %}selected{% endif %}>En attente</option>
+            </select>
+            
+            <select name="order_by">
+                <option value="">Trier par</option>
+                <option value="date" {% if request.GET.order_by == 'date' %}selected{% endif %}>Date</option>
+                <option value="title" {% if request.GET.order_by == 'title' %}selected{% endif %}>Titre</option>
+            </select>
+            
+            <button type="submit">Rechercher</button>
+        </form>
+
+        <br>
+
+        <p></p>
+
+        <!-- Liste des tâches -->
+        <ul class="task-list">
+            {% for tache in taches %}
+            
+            <li class="task-item">
+                <form method="post" action="{% url 'toggle_tache_etat' tache.id %}" class="inline-form">
+                    {% csrf_token %}
+                    <input type="checkbox" class="task-checkbox" name="etat" {% if tache.etat %}checked{% endif %} onChange="this.form.submit()">
+                </form>
+                <span class="task-title">{{ tache.title }} </span>  
+                <br>
+                <br>
+                {{ tache.description }}
+                <br> 
+                <br>
+                
+                
+                
+                <small>Date : {{ tache.date }}</small>
+                
+                {% if tache.etat %}
+                    <span class="status done">Terminé</span>
+                {% else %}
+                    <span class="status pending">En cours</span>
+                {% endif %}
+                <br>
+                <!-- Liens pour modifier et supprimer la tâche -->
+                <a href="{% url 'modif_tache' tache.id %}" class="btn">Modifier</a> |
+                <form action="{% url 'sup_tache' tache.id %}" method="post" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')" class="btn-delete">Supprimer</button>
+                </form>
+            </li>
+            {% empty %}
+            <li>Aucune tâche n'est disponible.</li>
+            {% endfor %}
+            <!-- formulaire de déconnexion -->
+            <a href="{% url 'deconnexion' %}">Se déconnecter</a>
+
+        </ul>
+    </div>
+</body>
+</html>

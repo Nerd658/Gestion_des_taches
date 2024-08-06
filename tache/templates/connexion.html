@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .image-container, .form-container {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .form-container form {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .form-outline {
+            margin-bottom: 1.5rem;
+        }
+        .form-outline input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-outline label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .form-check input {
+            margin-right: 10px;
+        }
+        .form-check label {
+            margin: 0;
+        }
+        .error-icon {
+            color: red;
+            margin-right: 5px;
+        }
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease;
+        }
+        .btn1{
+            color: blue;
+            border: none;
+            font-size: 15px;
+            
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .divider:not(:empty)::before {
+            margin-right: .25em;
+        }
+        .divider:not(:empty)::after {
+            margin-left: .25em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://i.pinimg.com/originals/31/36/cd/3136cd447c99783f59cd1a4c7d9ca9c1.png" alt="Phone image">
+        </div>
+        <div class="form-container">
+            <form method="post" action=" {% url 'connexion' %} ">
+
+                {% csrf_token %}
+                {% if messages %}
+                {% for message in messages %}
+                <i class="fas fa-exclamation-circle error-icon"></i>
+                    
+                    <div class="error">{{ message }}</div>
+                    
+                {% endfor %}
+                {% endif %}
+                <br>
+                <!-- Email input -->
+                <div class="form-outline">
+                    <label class="form-label" for="form1Example13" > Username</label>
+                    <input type="text" id="form1Example13" name="username" class="form-control form-control-lg" />
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline">
+                    <label class="form-label" for="form1Example23">Password</label>
+                    <input type="password" id="form1Example23" class="form-control form-control-lg"  name="password"/>
+                </div>
+
+                <div class="form-check">
+                    <!-- Checkbox -->
+                    <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
+                    <label class="form-check-label" for="form1Example3"> Remember me </label>
+                </div>
+
+                <a href="#!" style="display: block; margin-bottom: 1.5rem;">Forgot password?</a>
+
+                <!-- Submit button -->
+                
+                <button type="submit" class="btn">Sign in</button>
+                <a href="{% url 'inscription' %}">S'inscrire</a>
+
+                
+            </form>
+        </div>
+    </div>
+</body>
+</html>
